@@ -35,14 +35,14 @@
 		ad9695_clkin: clock@0 {
 			#clock-cells = <0>;
 			compatible = "adjustable-clock";
-			clock-frequency = <240000000>;
+			clock-frequency = <1920000000>;
 			clock-accuracy = <1000000000>;
 			clock-output-names = "ad9695_clk";
 		};
 		device_clk: clock@1 {
 			#clock-cells = <0>;
 			compatible = "adjustable-clock";
-			clock-frequency = <192000000>;
+			clock-frequency = <240000000>;
 			clock-accuracy = <1000000000>;
 			clock-output-names = "dev_clk";
 		};
