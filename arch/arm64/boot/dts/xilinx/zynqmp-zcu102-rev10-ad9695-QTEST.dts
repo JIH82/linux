@@ -35,14 +35,14 @@
 		ad9695_clkin: clock@0 {
 			#clock-cells = <0>;
 			compatible = "adjustable-clock";
-			clock-frequency = <1920000000>;		//ADC CLK
+			clock-frequency = <240000000>;		//ADC CLK
 			clock-accuracy = <1000000000>;
 			clock-output-names = "ad9695_clk";
 		};
 		device_clk: clock@1 {
 			#clock-cells = <0>;
 			compatible = "adjustable-clock";
-			clock-frequency = <240000000>;		//global reference clock
+			clock-frequency = <60000000>;		//global reference clock clk=SLR/div default 40 found in hdl
 			clock-accuracy = <1000000000>;
 			clock-output-names = "dev_clk";
 		};
