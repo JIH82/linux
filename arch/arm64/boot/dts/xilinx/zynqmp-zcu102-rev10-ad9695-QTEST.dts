@@ -83,7 +83,7 @@
 			reg = <0x84aa0000 0x4000>;
 			interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
 
-			clocks = <&zynqmp_clk 71>, <&device_clk>, <&axi_ad9695_adxcvr 0>;
+			clocks = <&zynqmp_clk 71>, <&device_clk>, <&axi_ad9695_adxcvr 1>; // changed QPLL clock channel from 0 to 1
 			clock-names = "s_axi_aclk", "device_clk", "lane_clk";
 
 			adi,octets-per-frame = <1>;
