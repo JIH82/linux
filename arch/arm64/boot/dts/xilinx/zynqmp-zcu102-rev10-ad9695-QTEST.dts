@@ -137,7 +137,7 @@
 		adi,powerdown-mode = <AD9208_PDN_MODE_POWERDOWN>;
 
 		adi,sampling-frequency = /bits/ 64 <240000000>; //not needed if adi,lane-rate is used
-		adi,lane-rate = <2400000000>;	//withought specifying this, supposedly, the lane rate is calculated from M,N, & L
+		adi,lane-rate = <2400000>;	//withought specifying this, supposedly, the lane rate is calculated from M,N, & L
 		adi,input-clock-divider-ratio = <1>;
 		adi,duty-cycle-stabilizer-enable;
 
