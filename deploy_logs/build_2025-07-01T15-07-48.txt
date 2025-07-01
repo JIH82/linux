@@ -1,0 +1,8 @@
+Build started: 2025-07-01T15-07-48
+Kernel source: ./linux
+Kernel version: 6.6.0
+Device tree output dir: ./linux/arch/arm64/boot/dts/xilinx
+Note: All DTBs in the Makefile will be built automatically.
+-------------------------------------------------------------
+  CALL    scripts/checksyscalls.sh
+❌ Kernel Image not found at ./linux/arch/arm64/boot/Image

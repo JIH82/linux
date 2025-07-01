@@ -1,0 +1,103 @@
+Build started: 2025-07-01T15-05-00
+Kernel source: ./linux
+Kernel version: 6.6.0
+Device tree output dir: ./linux/arch/arm64/boot/dts/xilinx
+Note: All DTBs in the Makefile will be built automatically.
+-------------------------------------------------------------
+  UPD     include/config/kernel.release
+  UPD     include/generated/utsrelease.h
+  CALL    scripts/checksyscalls.sh
+  CC      arch/arm64/kernel/vdso/vgettimeofday.o
+  LD      arch/arm64/kernel/vdso/vdso.so.dbg
+  VDSOSYM include/generated/vdso-offsets.h
+  OBJCOPY arch/arm64/kernel/vdso/vdso.so
+  CC      init/version.o
+  CC      arch/arm64/kernel/signal.o
+  CC      kernel/sys.o
+  CC      net/ethtool/ioctl.o
+  CC      arch/arm64/kernel/vdso.o
+  AR      init/built-in.a
+  CC      arch/arm64/kernel/alternative.o
+  CC      drivers/base/firmware_loader/main.o
+  CC      arch/arm64/kernel/signal32.o
+  CC      kernel/module/main.o
+  AS      arch/arm64/kernel/vdso-wrap.o
+  AR      drivers/base/firmware_loader/built-in.a
+  AR      drivers/base/built-in.a
+  AR      arch/arm64/kernel/built-in.a
+  AR      arch/arm64/built-in.a
+  AR      drivers/built-in.a
+  AR      net/ethtool/built-in.a
+  AR      net/built-in.a
+  AR      kernel/module/built-in.a
+  AR      kernel/built-in.a
+  AR      built-in.a
+  AR      vmlinux.a
+  LD      vmlinux.o
+  OBJCOPY modules.builtin.modinfo
+  GEN     modules.builtin
+  MODPOST Module.symvers
+  UPD     include/generated/utsversion.h
+  CC      init/version-timestamp.o
+  CC [M]  fs/efivarfs/efivarfs.mod.o
+  CC [M]  drivers/clk/xilinx/xlnx_vcu.mod.o
+  CC [M]  drivers/mtd/tests/mtd_oobtest.mod.o
+  CC [M]  drivers/mtd/tests/mtd_pagetest.mod.o
+  CC [M]  drivers/mtd/tests/mtd_readtest.mod.o
+  CC [M]  drivers/mtd/tests/mtd_speedtest.mod.o
+  CC [M]  drivers/mtd/tests/mtd_stresstest.mod.o
+  CC [M]  drivers/mtd/tests/mtd_subpagetest.mod.o
+  CC [M]  drivers/mtd/tests/mtd_torturetest.mod.o
+  CC [M]  drivers/mtd/tests/mtd_nandecctest.mod.o
+  CC [M]  drivers/mtd/tests/mtd_nandbiterrs.mod.o
+  CC [M]  drivers/uio/uio_pdrv_genirq.mod.o
+  CC [M]  drivers/uio/uio_dmem_genirq.mod.o
+  CC [M]  drivers/remoteproc/zynqmp_r5_remoteproc.mod.o
+  CC [M]  drivers/rpmsg/rpmsg_core.mod.o
+  LD      .tmp_vmlinux.kallsyms1
+  CC [M]  drivers/rpmsg/rpmsg_ns.mod.o
+  CC [M]  drivers/rpmsg/virtio_rpmsg_bus.mod.o
+  CC [M]  net/netfilter/nf_conntrack.mod.o
+  CC [M]  net/netfilter/nf_conntrack_netlink.mod.o
+  CC [M]  net/netfilter/xt_connmark.mod.o
+  CC [M]  net/netfilter/xt_conntrack.mod.o
+  CC [M]  net/netfilter/xt_state.mod.o
+  CC [M]  net/ipv4/netfilter/nf_defrag_ipv4.mod.o
+  CC [M]  net/ipv6/netfilter/nf_defrag_ipv6.mod.o
+  LD [M]  fs/efivarfs/efivarfs.ko
+  LD [M]  drivers/clk/xilinx/xlnx_vcu.ko
+  LD [M]  drivers/mtd/tests/mtd_oobtest.ko
+  LD [M]  drivers/mtd/tests/mtd_pagetest.ko
+  LD [M]  drivers/mtd/tests/mtd_readtest.ko
+  LD [M]  drivers/mtd/tests/mtd_speedtest.ko
+  LD [M]  drivers/mtd/tests/mtd_stresstest.ko
+  LD [M]  drivers/mtd/tests/mtd_subpagetest.ko
+  LD [M]  drivers/mtd/tests/mtd_torturetest.ko
+  LD [M]  drivers/mtd/tests/mtd_nandecctest.ko
+  LD [M]  drivers/mtd/tests/mtd_nandbiterrs.ko
+  LD [M]  drivers/uio/uio_dmem_genirq.ko
+  LD [M]  drivers/remoteproc/zynqmp_r5_remoteproc.ko
+  LD [M]  drivers/rpmsg/rpmsg_core.ko
+  LD [M]  drivers/uio/uio_pdrv_genirq.ko
+  LD [M]  drivers/rpmsg/rpmsg_ns.ko
+  LD [M]  net/netfilter/nf_conntrack.ko
+  LD [M]  net/netfilter/xt_conntrack.ko
+  LD [M]  net/netfilter/xt_state.ko
+  LD [M]  net/ipv6/netfilter/nf_defrag_ipv6.ko
+  LD [M]  drivers/rpmsg/virtio_rpmsg_bus.ko
+  LD [M]  net/netfilter/xt_connmark.ko
+  LD [M]  net/netfilter/nf_conntrack_netlink.ko
+  LD [M]  net/ipv4/netfilter/nf_defrag_ipv4.ko
+  NM      .tmp_vmlinux.kallsyms1.syms
+  KSYMS   .tmp_vmlinux.kallsyms1.S
+  AS      .tmp_vmlinux.kallsyms1.S
+  LD      .tmp_vmlinux.kallsyms2
+  NM      .tmp_vmlinux.kallsyms2.syms
+  KSYMS   .tmp_vmlinux.kallsyms2.S
+  AS      .tmp_vmlinux.kallsyms2.S
+  LD      vmlinux
+  NM      System.map
+  SORTTAB vmlinux
+  OBJCOPY arch/arm64/boot/Image
+  GZIP    arch/arm64/boot/Image.gz
+❌ Kernel Image not found at ./linux/arch/arm64/boot/Image
