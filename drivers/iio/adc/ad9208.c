@@ -1,3 +1,15 @@
+/* ─────────── AI INSTRUCTIONS ───────────
+# • Sections flagged with “# AI:ReadOnly=1” … “# AI:endLock” are locked.
+# • Sections flagged with “# AI:ReadOnly=0” … “# AI:endLock” are editable.
+# • If asked to edit a locked section, report an error and do nothing there.
+# • Only change code inside unlocked sections.
+# • Show edits in a ```diff``` code fence:
+#     - Lines removed get a leading “- ”
+#     + Lines added get a leading “+ ”
+# • Never modify any other lines or insert new AI directives.
+# • Only alter exactly the lines or values I’ve asked for.
+# ───────────────────────────────────────
+ */
 // SPDX-License-Identifier: GPL-2.0
 /*
  * Driver for AD9208 and similar high-speed Analog-to-Digital converters
@@ -966,6 +978,34 @@ static int ad9208_setup(struct spi_device *spi)
 		return ret;
 	}
 
+	/*	begin JIH82 insertion
+ * Program PLL lane rate range register (0x056E) based on lane rate.
+ * Datasheet recommends 0x50 for 2.4 Gbps, higher for >4 Gbps, etc.
+ * This is required if PLL lock is failing due to mismatched configuration.
+ */
+
+u8 pll_range_val;
+
+if (st->lane_rate_kbps < 3000000)
+	pll_range_val = 0x50;  // e.g. for ~2.4 Gbps
+else if (st->lane_rate_kbps < 6000000)
+	pll_range_val = 0x70;
+else
+	pll_range_val = 0x90;
+
+ret = ad9208_write(&st->ad9208, 0x056E, pll_range_val);
+if (ret < 0) {
+	dev_warn(&spi->dev,
+		"Failed to write PLL range register 0x056E = 0x%02X\n",
+		pll_range_val);
+} else {
+	dev_info(&spi->dev,
+		"Set PLL range (0x056E) to 0x%02X for lane rate %llu kbps\n",
+		pll_range_val, st->lane_rate_kbps);
+}
+
+// end of insertion JIH82
+
 	timeout = 10;
 
 	do {
@@ -980,7 +1020,7 @@ static int ad9208_setup(struct spi_device *spi)
 	} while (!(pll_stat & AD9208_JESD_PLL_LOCK_STAT) && timeout--);
 
 	dev_info(&conv->spi->dev, "%s PLL %s\n", spi_get_device_id(spi)->name,
-		 pll_stat & AD9208_JESD_PLL_LOCK_STAT ? "LOCKED" : "UNLOCKED");
+		 pll_stat & AD9208_JESD_PLL_LOCK_STAT ? "LOCKED" : "UNLOCKED");		
 
 	if (!phy->jdev) {
 		ret = clk_set_rate(conv->lane_clk, lane_rate_kbps);
@@ -1525,6 +1565,7 @@ static int ad9208_probe(struct spi_device *spi)
 		dev_err(&spi->dev, "init failed (%d)\n", ret);
 		return -ENODEV;
 	}
+
 
 	ret = ad9208_reset(&phy->ad9208, 0);
 	if (ret < 0) {
