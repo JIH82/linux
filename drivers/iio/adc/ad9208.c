@@ -979,32 +979,37 @@ static int ad9208_setup(struct spi_device *spi)
 	}
 
 	/*	begin JIH82 insertion
- * Program PLL lane rate range register (0x056E) based on lane rate.
- * Datasheet recommends 0x50 for 2.4 Gbps, higher for >4 Gbps, etc.
- * This is required if PLL lock is failing due to mismatched configuration.
- */
+ 	 * begin JIH82 insertion
+	 * Program PLL lane rate range register (0x056E) based on lane rate.
+	 * This sets the VCO band for the JESD204 link PLL.
+	 * Typical values:
+	 *   - 0x50 for ≤3 Gbps
+	 *   - 0x70 for 3–6 Gbps
+	 *   - 0x90 for >6 Gbps
+	 * Without this, PLL may fail to lock on certain configurations.
+	 */
 
-u8 pll_range_val;
+	u8 pll_range_val;
 
-if (st->lane_rate_kbps < 3000000)
-	pll_range_val = 0x50;  // e.g. for ~2.4 Gbps
-else if (st->lane_rate_kbps < 6000000)
-	pll_range_val = 0x70;
-else
-	pll_range_val = 0x90;
+	if (lane_rate_kbps < 3000000)
+		pll_range_val = 0x50;
+	else if (lane_rate_kbps < 6000000)
+		pll_range_val = 0x70;
+	else
+		pll_range_val = 0x90;
 
-ret = ad9208_write(&st->ad9208, 0x056E, pll_range_val);
-if (ret < 0) {
-	dev_warn(&spi->dev,
-		"Failed to write PLL range register 0x056E = 0x%02X\n",
-		pll_range_val);
-} else {
-	dev_info(&spi->dev,
-		"Set PLL range (0x056E) to 0x%02X for lane rate %llu kbps\n",
-		pll_range_val, st->lane_rate_kbps);
-}
+	ret = ad9208_register_write(&phy->ad9208, 0x056E, pll_range_val);
+	if (ret < 0) {
+		dev_warn(&spi->dev,
+			"Failed to write PLL range register 0x056E = 0x%02X\n",
+			pll_range_val);
+	} else {
+		dev_info(&spi->dev,
+			"Set PLL range (0x056E) to 0x%02X for lane rate %llu kbps\n",
+			pll_range_val, lane_rate_kbps);
+	}
+	// end of insertion JIH82
 
-// end of insertion JIH82
 
 	timeout = 10;
 
@@ -1643,11 +1648,19 @@ static int ad9208_probe(struct spi_device *spi)
 	conv->chip_info = &phy->chip_info;
 
 	ret = ad9208_setup(spi);
+	//if (ret) {
+	//	if (ret != -EPROBE_DEFER)
+	//		dev_err(&spi->dev, "Failed to initialize: %d\n", ret);
+	//	return ret;
+	//}
+	// begin debug override to keep SPI device active even if setup fails
+	
 	if (ret) {
-		if (ret != -EPROBE_DEFER)
-			dev_err(&spi->dev, "Failed to initialize: %d\n", ret);
-		return ret;
+		dev_err(&spi->dev,
+			"Setup failed — keeping device registered for debug: %d\n", ret);
+		// DO NOT return; continue with IIO registration for SPI access and diagnostics
 	}
+// end debug override
 
 	conv->reg_access = ad9208_reg_access;
 	conv->write_raw = ad9208_write_raw;

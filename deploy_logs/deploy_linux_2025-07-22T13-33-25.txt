@@ -1,0 +1,76 @@
+midifying ad9208.c to add write to 0x56  based on device tree input at startup
+Timestamp: 2025-07-22T13-33-25
+Kernel: 6.6.0
+Base Hash: a911c3cf3aa7
+Files:
+ .../xilinx/zynqmp-zcu102-rev10-ad9695-QTEST.dts    |  2 +-
+ drivers/iio/adc/ad9208.c                           | 43 +++++++++++++++++++++-
+ 2 files changed, 43 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-ad9695-QTEST.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-ad9695-QTEST.dts
+index 70d38cde5d58..0537ddb45579 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-ad9695-QTEST.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev10-ad9695-QTEST.dts
+@@ -44,3 +44,3 @@ device_clk: clock@1 {
+ 			compatible = "adjustable-clock";
+-			clock-frequency = <60000000>;		//global reference clock clk=SLR/div default 40 found in hdl
++			clock-frequency = <120000000>;		//global reference clock clk=SLR/div default 40 found in hdl
+ 			clock-accuracy = <1000000000>;
+diff --git a/drivers/iio/adc/ad9208.c b/drivers/iio/adc/ad9208.c
+index 89426b9d0f2a..1a52ae8914fb 100644
+--- a/drivers/iio/adc/ad9208.c
++++ b/drivers/iio/adc/ad9208.c
+@@ -1 +1,13 @@
++/* ─────────── AI INSTRUCTIONS ───────────
++# • Sections flagged with “# AI:ReadOnly=1” … “# AI:endLock” are locked.
++# • Sections flagged with “# AI:ReadOnly=0” … “# AI:endLock” are editable.
++# • If asked to edit a locked section, report an error and do nothing there.
++# • Only change code inside unlocked sections.
++# • Show edits in a ```diff``` code fence:
++#     - Lines removed get a leading “- ”
++#     + Lines added get a leading “+ ”
++# • Never modify any other lines or insert new AI directives.
++# • Only alter exactly the lines or values I’ve asked for.
++# ───────────────────────────────────────
++ */
+ // SPDX-License-Identifier: GPL-2.0
+@@ -968,2 +980,30 @@ static int ad9208_setup(struct spi_device *spi)
+ 
++	/*	begin JIH82 insertion
++ * Program PLL lane rate range register (0x056E) based on lane rate.
++ * Datasheet recommends 0x50 for 2.4 Gbps, higher for >4 Gbps, etc.
++ * This is required if PLL lock is failing due to mismatched configuration.
++ */
++
++u8 pll_range_val;
++
++if (st->lane_rate_kbps < 3000000)
++	pll_range_val = 0x50;  // e.g. for ~2.4 Gbps
++else if (st->lane_rate_kbps < 6000000)
++	pll_range_val = 0x70;
++else
++	pll_range_val = 0x90;
++
++ret = ad9208_write(&st->ad9208, 0x056E, pll_range_val);
++if (ret < 0) {
++	dev_warn(&spi->dev,
++		"Failed to write PLL range register 0x056E = 0x%02X\n",
++		pll_range_val);
++} else {
++	dev_info(&spi->dev,
++		"Set PLL range (0x056E) to 0x%02X for lane rate %llu kbps\n",
++		pll_range_val, st->lane_rate_kbps);
++}
++
++// end of insertion JIH82
++
+ 	timeout = 10;
+@@ -982,3 +1022,3 @@ static int ad9208_setup(struct spi_device *spi)
+ 	dev_info(&conv->spi->dev, "%s PLL %s\n", spi_get_device_id(spi)->name,
+-		 pll_stat & AD9208_JESD_PLL_LOCK_STAT ? "LOCKED" : "UNLOCKED");
++		 pll_stat & AD9208_JESD_PLL_LOCK_STAT ? "LOCKED" : "UNLOCKED");		
+ 
+@@ -1528,2 +1568,3 @@ static int ad9208_probe(struct spi_device *spi)
+ 
++
+ 	ret = ad9208_reset(&phy->ad9208, 0);
