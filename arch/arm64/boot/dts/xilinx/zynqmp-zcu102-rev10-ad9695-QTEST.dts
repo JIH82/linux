@@ -35,21 +35,21 @@
 		ad9695_clkin: clock@0 {
 			#clock-cells = <0>;
 			compatible = "adjustable-clock";
-			clock-frequency = <625000000>;		//ADC CLK
+			clock-frequency = <240000000>;	//fadc
 			clock-accuracy = <1000000000>;
 			clock-output-names = "ad9695_clk";
 		};
 		device_clk: clock@1 {
 			#clock-cells = <0>;
 			compatible = "adjustable-clock";
-			clock-frequency = <250000000>;		//global reference clock clk=SLR/div default 40 found in hdl
+			clock-frequency = <120000000>;	//refclk
 			clock-accuracy = <1000000000>;
 			clock-output-names = "dev_clk";
 		};
 		sysref: clock@2 {
 			#clock-cells = <0>;
 			compatible = "adjustable-clock";
-			clock-frequency = <9765625>;		//sysref
+			clock-frequency = <0>;			//sysref
 			clock-accuracy = <1000000000>;
 			clock-output-names = "adc_sysref";
 		};
@@ -83,7 +83,7 @@
 			reg = <0x84aa0000 0x4000>;
 			interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
 
-			clocks = <&zynqmp_clk 71>, <&device_clk>, <&axi_ad9695_adxcvr 0>; 
+			clocks = <&zynqmp_clk 71>, <&device_clk>, <&axi_ad9695_adxcvr 0>;
 			clock-names = "s_axi_aclk", "device_clk", "lane_clk";
 
 			adi,octets-per-frame = <1>;
@@ -101,7 +101,7 @@
 			clocks = <&device_clk>, <&device_clk>;
 			clock-names = "conv", "div40";
 
-			adi,sys-clk-select = <XCVR_QPLL>;       // was likely XCVR_QPLL
+			adi,sys-clk-select = <XCVR_QPLL>;		//pll type QPLL/CPLL
 			adi,out-clk-select = <XCVR_REFCLK>;
 			adi,use-lpm-enable;
 
@@ -136,8 +136,7 @@
 
 		adi,powerdown-mode = <AD9208_PDN_MODE_POWERDOWN>;
 
-		adi,sampling-frequency = /bits/ 64 <500000000>; //not needed if adi,lane-rate is used
-		adi,lane-rate = <6250000>;	//withought specifying this, supposedly, the lane rate is calculated from M,N, & L
+		adi,sampling-frequency = /bits/ 64 <240000000>;		//ADC CLK
 		adi,input-clock-divider-ratio = <1>;
 		adi,duty-cycle-stabilizer-enable;
 
@@ -152,14 +151,14 @@
 
 		/* JESD204 parameters */
 
-		adi,octets-per-frame = <1>;		//F
+		adi,octets-per-frame = <4>;		//F
 		adi,frames-per-multiframe = <32>;	//K
 		adi,converter-resolution = <16>;	//N
 		adi,bits-per-sample = <16>;		//N'
 		adi,converters-per-device = <2>;	//M
 		adi,control-bits-per-sample = <0>;	//CS
-		adi,lanes-per-device = <4>;		//L
-		adi,subclass = <0>;			//SYSREF SUBCLASS   adi,subclass = <1>;
+		adi,lanes-per-device = <1>;		//L
+		adi,subclass = <0>;			//SYSREF SUBCLASS
 
 		#address-cells = <1>;
 		#size-cells = <0>;

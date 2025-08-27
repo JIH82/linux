@@ -989,26 +989,29 @@ static int ad9208_setup(struct spi_device *spi)
 	 * Without this, PLL may fail to lock on certain configurations.
 	 */
 
-	u8 pll_range_val;
-
-	if (lane_rate_kbps < 3000000)
-		pll_range_val = 0x50;
-	else if (lane_rate_kbps < 6000000)
-		pll_range_val = 0x70;
-	else
-		pll_range_val = 0x90;
-
-	ret = ad9208_register_write(&phy->ad9208, 0x056E, pll_range_val);
-	if (ret < 0) {
-		dev_warn(&spi->dev,
-			"Failed to write PLL range register 0x056E = 0x%02X\n",
-			pll_range_val);
-	} else {
-		dev_info(&spi->dev,
-			"Set PLL range (0x056E) to 0x%02X for lane rate %llu kbps\n",
-			pll_range_val, lane_rate_kbps);
-	}
-	// end of insertion JIH82
+//	u8 pll_range_val;
+//		// should have an undervalue failure. bad code monkey!
+//		if (lane_rate_kbps <= 3375000)
+//			pll_range_val = 0x50;
+//	else if (lane_rate_kbps < 6750000)
+//		pll_range_val = 0x10;
+//	else if (lane_rate_kbps < 13600000)
+//		pll_range_val = 0x00;
+//	else
+//		pll_range_val = 0x30;
+//		//really should have a invalid state failure
+//
+//	ret = ad9208_register_write(&phy->ad9208, 0x056E, pll_range_val);
+//	if (ret < 0) {
+//		dev_warn(&spi->dev,
+//			"Failed to write PLL range register 0x056E = 0x%02X\n",
+//			pll_range_val);
+//	} else {
+//		dev_info(&spi->dev,
+//			"Set PLL range (0x056E) to 0x%02X for lane rate %llu kbps\n",
+//			pll_range_val, lane_rate_kbps);
+//	}
+//	// end of insertion JIH82
 
 
 	timeout = 10;

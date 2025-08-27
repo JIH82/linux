@@ -1,0 +1,32 @@
+./ad9208/ad9208_jesd_api.c:54:} jesd_serdes_pll_cfg;
+./ad9208/ad9208_jesd_api.c:57:static jesd_serdes_pll_cfg ADI_REC_SERDES_PLL_CFG[] = {
+./ad9208/ad9208_jesd_api.c:71:	for (i = 0; i < ARRAY_SIZE(ADI_REC_SERDES_PLL_CFG); i++) {
+./ad9208/ad9208_jesd_api.c:72:		if ((slr_mbps >= ADI_REC_SERDES_PLL_CFG[i].slr_lwr_thres) &&
+./ad9208/ad9208_jesd_api.c:73:		    (slr_mbps < ADI_REC_SERDES_PLL_CFG[i].slr_upr_thres)) {
+./ad9208/ad9208_jesd_api.c:74:			*vco_cfg = ADI_REC_SERDES_PLL_CFG[i].vco_cfg;
+./ad9208/ad9208_jesd_api.c:200:	/*CFG SERDES PLL for SLR */
+./ad9208/ad9208_jesd_api.c:210:		err = ad9208_register_read(h, AD9208_JESD_SERDES_PLL_CFG_REG, &tmp_reg);
+./ad9208/ad9208_jesd_api.c:215:		err = ad9208_register_write(h, AD9208_JESD_SERDES_PLL_CFG_REG, tmp_reg);
+./ad9208/ad9208_jesd_api.c:220:	err = ad9208_register_read(h, AD9208_JESD_SERDES_PLL_CFG_REG, &tmp_reg);
+./ad9208/ad9208_jesd_api.c:225:	err = ad9208_register_write(h, AD9208_JESD_SERDES_PLL_CFG_REG, tmp_reg);
+./ad9208/ad9208_jesd_api.c:481:int ad9208_jesd_get_pll_status(ad9208_handle_t *h, uint8_t *pll_status)
+./ad9208/ad9208_jesd_api.c:488:	if (pll_status == NULL)
+./ad9208/ad9208_jesd_api.c:491:	err = ad9208_register_read(h, AD9208_JESD_SERDES_PLL_REG, &tmp_reg);
+./ad9208/ad9208_jesd_api.c:494:	*pll_status = tmp_reg;
+./ad9208/ad9208_reg.h:198:#define AD9208_JESD_SERDES_PLL_CFG_REG 0x056E
+./ad9208/ad9208_reg.h:201:#define AD9208_JESD_SERDES_PLL_REG    0x056F
+./ad9208/ad9208_reg.h:202:#define AD9208_JESD_PLL_LOCK_STAT     BIT(7)
+Binary file ./ad9208/ad9208_jesd_api.o matches
+./ad9208/AD9208.h:72:/** Enumerates SERDES PLL Status Flags*/
+./ad9208/AD9208.h:74:	AD9208_PLL_LOCK_STAT = 0x8, /**< Serdes PLL lock Status Flag*/
+./ad9208/AD9208.h:75:	AD9208_PLL_LOSSLOCK = 0x4   /**< Serdes PLL Lost Lock Status Flag*/
+./ad9208/AD9208.h:76:} ad9208_jesd_serdes_pll_flg_t;
+./ad9208/AD9208.h:796: * \brief  Get SERDES PLL Status Flags
+./ad9208/AD9208.h:798: * Read Serdes PLL status and return the status via the
+./ad9208/AD9208.h:799: * pll_status parameter.
+./ad9208/AD9208.h:803: * \param *pll_status  Pointer to the variable that will be set with
+./ad9208/AD9208.h:804: *                     the PLL status. Lock Status bits are enumerated by
+./ad9208/AD9208.h:805: *                     ad9208_jesd_serdes_pll_flg_t;
+./ad9208/AD9208.h:806: *                     bit[7] => PLL Lock Status
+./ad9208/AD9208.h:807: *                     bit[3] => PLL Lost Lock Status
+./ad9208/AD9208.h:815:int ad9208_jesd_get_pll_status(ad9208_handle_t *h, uint8_t *pll_status);

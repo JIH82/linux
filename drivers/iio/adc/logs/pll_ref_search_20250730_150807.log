@@ -1,0 +1,41 @@
+🔍 PLL/QPLL/CPLL Reference Search — Started at 20250730_150807
+
+📁 Target directory: ./ad9208
+📄 Driver file: ./ad9208.c
+
+🔗 Resolving includes and references from ./ad9208.c...
+⚠️  WARNING: Included file not found: ./ad9208/cf_axi_adc.h
+⚠️  WARNING: Included file not found: ./ad9208/ad9208/AD9208.h
+⚠️  WARNING: Included file not found: ./ad9208/ad9208/ad9208_reg.h
+⚠️  WARNING: Included file not found: ./ad9208/ad9208/api_errors.h
+✅ Found 0 referenced include files.
+
+🔍 Searching for pll/qpll/cpll references...
+📄 Matches in: ./ad9208.c
+./ad9208.c:783:	u8 pll_stat, dcm, lanes;
+./ad9208.c:983:	 * Program PLL lane rate range register (0x056E) based on lane rate.
+./ad9208.c:984:	 * This sets the VCO band for the JESD204 link PLL.
+./ad9208.c:989:	 * Without this, PLL may fail to lock on certain configurations.
+./ad9208.c:992:	u8 pll_range_val;
+./ad9208.c:995:		pll_range_val = 50;
+./ad9208.c:997:		pll_range_val = 0x10;
+./ad9208.c:999:		pll_range_val = 0x00;
+./ad9208.c:1001:		pll_range_val = 0x30;
+./ad9208.c:1003:	ret = ad9208_register_write(&phy->ad9208, 0x056E, pll_range_val);
+./ad9208.c:1006:			"Failed to write PLL range register 0x056E = 0x%02X\n",
+./ad9208.c:1007:			pll_range_val);
+./ad9208.c:1010:			"Set PLL range (0x056E) to 0x%02X for lane rate %llu kbps\n",
+./ad9208.c:1011:			pll_range_val, lane_rate_kbps);
+./ad9208.c:1021:		ret = ad9208_jesd_get_pll_status(&phy->ad9208, &pll_stat);
+./ad9208.c:1024:				"Failed to get pll status (%d)\n", ret);
+./ad9208.c:1027:	} while (!(pll_stat & AD9208_JESD_PLL_LOCK_STAT) && timeout--);
+./ad9208.c:1029:	dev_info(&conv->spi->dev, "%s PLL %s\n", spi_get_device_id(spi)->name,
+./ad9208.c:1030:		 pll_stat & AD9208_JESD_PLL_LOCK_STAT ? "LOCKED" : "UNLOCKED");		
+./ad9208.c:1067:	ad9208_jesd_get_pll_status(&phy->ad9208, &stat);
+./ad9208.c:1068:	seq_printf(file, "JESD204 PLL is %slocked\n",
+./ad9208.c:1069:		   (stat & AD9208_JESD_PLL_LOCK_STAT) ? "" : "not ");
+
+🧪 Validation & Summary:
+❌ FAILURE: One or more issues detected.
+
+📋 Generating diagnostic script at ./logs/diag_script_20250730_150807.sh...

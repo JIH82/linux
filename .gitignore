@@ -170,3 +170,4 @@ sphinx_*/
 
 # Rust analyzer configuration
 /rust-project.json
+deploy_logs/deploy_2025-07-01T19-16-59.txt
