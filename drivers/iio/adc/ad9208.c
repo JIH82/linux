@@ -1,15 +1,3 @@
-/* ─────────── AI INSTRUCTIONS ───────────
-# • Sections flagged with “# AI:ReadOnly=1” … “# AI:endLock” are locked.
-# • Sections flagged with “# AI:ReadOnly=0” … “# AI:endLock” are editable.
-# • If asked to edit a locked section, report an error and do nothing there.
-# • Only change code inside unlocked sections.
-# • Show edits in a ```diff``` code fence:
-#     - Lines removed get a leading “- ”
-#     + Lines added get a leading “+ ”
-# • Never modify any other lines or insert new AI directives.
-# • Only alter exactly the lines or values I’ve asked for.
-# ───────────────────────────────────────
- */
 // SPDX-License-Identifier: GPL-2.0
 /*
  * Driver for AD9208 and similar high-speed Analog-to-Digital converters
